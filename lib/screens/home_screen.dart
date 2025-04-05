@@ -1,3 +1,4 @@
+import 'package:fcden/screens/order_screen.dart';
 import 'package:fcden/utils/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 
@@ -94,10 +95,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary),
-                    onPressed: () {},
-                    child: Text(
-                      "ENTER",
-                      style: TextStyle(fontSize: 17, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          transitionDuration: Duration(milliseconds: 500),
+                          pageBuilder: (_, __, ___) => OrderScreen(),
+                        ),
+                      );
+                    },
+                    child: Hero(
+                      tag: 'redd',
+                      child: Text(
+                        "ENTER",
+                        style: TextStyle(fontSize: 17, color: Colors.white),
+                      ),
                     ),
                   ),
                 )

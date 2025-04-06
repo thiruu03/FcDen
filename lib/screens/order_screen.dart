@@ -39,6 +39,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   // Store status for each row
   List<String> statusList = ["Processing", "Processing"]; // Default values
+  bool val = false;
 
   @override
   Widget build(BuildContext context) {
@@ -296,13 +297,26 @@ class _OrderScreenState extends State<OrderScreen> {
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 3),
-                                          child: Center(
-                                            child: Image.network(
-                                              item['image'],
-                                              width: isFullScreen ? 130 : 80,
-                                              height: isFullScreen ? 130 : 80,
-                                              fit: BoxFit.cover,
-                                            ),
+                                          child: Row(
+                                            children: [
+                                              Checkbox(
+                                                value: val,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    val = value!;
+                                                  });
+                                                },
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Image.network(
+                                                item['image'],
+                                                width: isFullScreen ? 130 : 80,
+                                                height: isFullScreen ? 130 : 80,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -351,7 +365,10 @@ class _OrderScreenState extends State<OrderScreen> {
             child: Text(statusList[index], style: TextStyle(fontSize: 20)))),
         DataCell(Center(
           child: IconButton(
-            icon: Icon(Icons.remove_red_eye),
+            icon: Icon(
+              Icons.remove_red_eye,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               setState(() {
                 isOrderVisible = true;

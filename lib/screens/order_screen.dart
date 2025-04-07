@@ -1,4 +1,6 @@
+import 'package:fcden/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -40,6 +42,26 @@ class _OrderScreenState extends State<OrderScreen> {
   // Store status for each row
   List<String> statusList = ["Processing", "Processing"]; // Default values
   bool val = false;
+  void showNotification() {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'kitchen_channel', // id
+      'Kitchen Updates', // title
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    flutterLocalNotificationsPlugin.show(
+      0, // notification id
+      'New Order Alert!',
+      'A new order has arrived in the kitchen.',
+      platformChannelSpecifics,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -354,7 +376,7 @@ class _OrderScreenState extends State<OrderScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: showNotification,
       ),
     );
   }

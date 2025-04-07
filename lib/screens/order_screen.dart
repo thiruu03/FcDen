@@ -352,6 +352,10 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
+      ),
     );
   }
 

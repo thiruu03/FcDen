@@ -2,7 +2,7 @@ import 'package:fcden/screens/splash_screen.dart';
 import 'package:fcden/themes/my_theme.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 

@@ -9,7 +9,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('assets/images/logo.png');
+      AndroidInitializationSettings('@drawable/notification');
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );

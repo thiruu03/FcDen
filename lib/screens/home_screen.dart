@@ -1,18 +1,18 @@
+import 'package:fcden/providers/location_provider.dart';
 import 'package:fcden/screens/order_screen.dart';
 import 'package:fcden/utils/custom_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
+
+    final locationProvider = Provider.of<LocationProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -66,9 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Welcome to',
                   style: TextStyle(fontFamily: 'lora', fontSize: 35),
                 ),
-                SizedBox(
-                  height: height / 30,
-                ),
+                SizedBox(height: height / 30),
                 CircleAvatar(
                   radius: 100,
                   backgroundColor: Colors.white,
@@ -77,42 +75,46 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 250,
                   ),
                 ),
-                SizedBox(
-                  height: height / 30,
-                ),
+                SizedBox(height: height / 30),
                 Text(
                   'Please choose your franchise location to proceed with your order.',
                   style: TextStyle(fontSize: 22),
                 ),
-                SizedBox(
-                  height: height / 30,
-                ),
+                SizedBox(height: height / 30),
                 CustomDropdown(),
-                SizedBox(
-                  height: height / 30,
-                ),
+                SizedBox(height: height / 30),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          transitionDuration: Duration(milliseconds: 500),
-                          pageBuilder: (_, __, ___) => OrderScreen(),
-                        ),
-                      );
-                    },
+                      backgroundColor: locationProvider.selectedLocation == null
+                          ? Colors.grey // Disabled color
+                          : Theme.of(context)
+                              .colorScheme
+                              .primary, // Enabled color
+                    ),
+                    onPressed: locationProvider.selectedLocation == null
+                        ? null // disables the button
+                        : () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 500),
+                                pageBuilder: (_, __, ___) => OrderScreen(),
+                              ),
+                            );
+                          },
                     child: Hero(
                       tag: 'redd',
                       child: Text(
                         "ENTER",
-                        style: TextStyle(fontSize: 17, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

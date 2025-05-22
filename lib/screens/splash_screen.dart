@@ -1,5 +1,9 @@
 import 'package:fcden/screens/home_screen.dart';
+import 'package:fcden/screens/order_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import '../providers/location_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,17 +13,69 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  InternetConnectionChecker internetConnectionChecker =
+      InternetConnectionChecker.instance;
+
+  Future<void> _checkInternetAndNavigate() async {
+    bool isConnected = await internetConnectionChecker.hasConnection;
+
+    if (!isConnected) {
+      _showNoInternetDialog();
+      return;
+    }
+
+    final locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+
+    // Load saved location if any
+    bool hasSavedLocation = await locationProvider.loadSavedLocation();
+
+    // If no saved location, fetch locations from API
+    if (!hasSavedLocation) {
+      await locationProvider.getlocation();
+    }
+
+    await Future.delayed(Duration(seconds: 2));
+
+    if (hasSavedLocation) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderScreen(),
+          ));
+    } else {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ));
+    }
+  }
+
+  void _showNoInternetDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: Text('No Internet Connection'),
+        content: Text('Please turn on mobile data or Wi-Fi to continue.'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              _checkInternetAndNavigate(); // Retry
+            },
+            child: Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5)).then((value) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
-    });
+    _checkInternetAndNavigate();
   }
 
   @override
@@ -41,15 +97,13 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          SizedBox(
-            height: 60,
-          ),
+          SizedBox(height: 60),
           Padding(
             padding: EdgeInsets.only(bottom: height / 10),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [
+                children: const [
                   Text(
                     "Powered BY",
                     style: TextStyle(color: Colors.white, fontSize: 17),
